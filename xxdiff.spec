@@ -1,7 +1,7 @@
 Summary:	Graphical file and directories comparator and merge tool
 Name:		xxdiff
 Version:	3.2
-Release:	12%{?dist}
+Release:	13%{?dist}
 License:	GPLv2+
 Group:		Development/Tools
 URL:		http://furius.ca/xxdiff/
@@ -9,7 +9,7 @@ URL:		http://furius.ca/xxdiff/
 # We remove the screenshots directory since the images in there can not be redistributed without permission.
 Source0:	xxdiff-%{version}-noscreenshots.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:	qt-devel < 1:4.0, bison, flex
+BuildRequires:	qt3-devel < 1:4.0, bison, flex
 
 Patch0:		%{name}-fix-cstdlib_h.patch
 
@@ -24,7 +24,7 @@ Summary: Tools for xxdiff
 Group: Development/Tools
 URL: http://furius.ca/xxdiff/doc/xxdiff-scripts.html
 Requires:	xxdiff
-BuildRequires:  python-devel
+BuildRequires:	python-devel
 
 %description tools
 Tools for xxdiff
@@ -86,6 +86,9 @@ find ./build  -name \*.py  -print  -exec %{__sed} -i "1{/^#\!/d}" {} \;
 %{_bindir}/xx-svn-resolve
 
 %changelog
+* Mon Nov 15 2010 Russell Cattelan <cattelan@xfs.org> - 3.2-13
+- Change BuildRequires from qt-devel to qt3-devel
+
 * Thu Jul 22 2010 David Malcolm <dmalcolm@redhat.com> - 3.2-12
 - Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
 
