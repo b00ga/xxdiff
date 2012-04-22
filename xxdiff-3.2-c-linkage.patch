@@ -1,0 +1,10 @@
+--- src/main.h
++++ src/main.h
+@@ -35,6 +35,6 @@
+  * PUBLIC DECLARATIONS
+  *============================================================================*/
+ 
+-extern char** environ;
++extern "C" char** environ;
+ 
+ #endif

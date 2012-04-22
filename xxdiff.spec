@@ -1,7 +1,7 @@
 Summary:	Graphical file and directories comparator and merge tool
 Name:		xxdiff
 Version:	3.2
-Release:	16%{?dist}
+Release:	17%{?dist}
 License:	GPLv2+
 Group:		Development/Tools
 URL:		http://furius.ca/xxdiff/
@@ -12,6 +12,8 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:	qt3-devel < 1:4.0, bison, flex
 
 Patch0:		%{name}-fix-cstdlib_h.patch
+Patch1:		xxdiff-3.2-c-linkage.patch
+Patch2:		xxdiff-3.2-string-constants.patch
 
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
@@ -32,6 +34,12 @@ Tools for xxdiff
 %prep
 %setup -q
 %patch0 -p2
+
+# Fix FTBFS with gcc 4.7
+%patch1
+
+# Fix the multitude of warnings about string constants converted to 'char*'
+%patch2 -p1
 
 %build
 if [ -z "$QTDIR" ]; then 
@@ -86,6 +94,9 @@ find ./build  -name \*.py  -print  -exec %{__sed} -i "1{/^#\!/d}" {} \;
 %{_bindir}/xx-svn-resolve
 
 %changelog
+* Sun Apr 22 2012 Paul Howarth <paul@city-fan.org> - 3.2-17
+- Fix FTBFS with gcc 4.7
+
 * Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2-16
 - Rebuilt for c++ ABI breakage
 
