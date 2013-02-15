@@ -1,7 +1,7 @@
 Summary:	Graphical file and directories comparator and merge tool
 Name:		xxdiff
 Version:	3.2
-Release:	18%{?dist}
+Release:	19%{?dist}
 License:	GPLv2+
 Group:		Development/Tools
 URL:		http://furius.ca/xxdiff/
@@ -94,6 +94,9 @@ find ./build  -name \*.py  -print  -exec %{__sed} -i "1{/^#\!/d}" {} \;
 %{_bindir}/xx-svn-resolve
 
 %changelog
+* Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2-18
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
