@@ -1,0 +1,103 @@
+Backport of proposed patch in upstream bugtracker:
+
+https://sourceforge.net/p/xxdiff/bugs/229/
+
+diff --git a/src/resParser.cpp b/src/resParser.cpp
+index e0b6023..63faad9 100644
+--- a/src/resParser.cpp
++++ b/src/resParser.cpp
+@@ -73,7 +73,7 @@ extern int resParserparse( void* );
+ 
+ //------------------------------------------------------------------------------
+ //
+-void resParsererror( const char* msg )
++void resParsererror( void* resources __attribute__((__unused__)), const char* msg )
+ {
+    // Send errors to stdout so we can filter out the debug info shmeglu while
+    // debugging parser.
+@@ -786,7 +786,7 @@ int parseFromKeywordList(
+       QString os;
+       QTextOStream oss( &os );
+       oss << "Unknown " << errmsg << ": " << name << flush;
+-      resParsererror( os.latin1() );
++      resParsererror( NULL, os.latin1() );
+    }
+    num = ERROR_TOKEN;
+    return ERROR_TOKEN;
+diff --git a/src/resParser.l b/src/resParser.l
+index 51c7f30..961ad3f 100644
+--- a/src/resParser.l
++++ b/src/resParser.l
+@@ -298,7 +298,7 @@ iddot           [a-zA-Z][a-zA-Z0-9\.]*
+                      QString os;
+                      QTextOStream oss( &os );
+                      oss << "ignoring char: " << yytext << flush;
+-                     yyerror( os.latin1() );
++                     yyerror( resources, os.latin1() );
+                      */
+                   }
+                 }
+diff --git a/src/resParser.y b/src/resParser.y
+index 716ed40..bae21cf 100644
+--- a/src/resParser.y
++++ b/src/resParser.y
+@@ -39,12 +39,11 @@
+ 
+ // The parser input is the resources object to fill in.
+ #define RESOURCES  ( static_cast<XxResources*>(resources) )
+-#define YYPARSE_PARAM resources
+ 
+ // Declare lexer from other compilation unit.
+ int resParserlex( YYSTYPE* yylval );
+ 
+-void resParsererror( const char* msg );
++void resParsererror( void *resources, const char* msg );
+ 
+ // Declare some parser functions and data defined in resParser.cpp
+ namespace XxResParserNS {
+@@ -58,6 +57,9 @@ using namespace XxResParserNS; // Make sure we can use the above.
+ 
+ %}
+ 
++/* The parser input is the resources object to fill in. */
++%parse-param { void *resources }
++
+ /* generate header file */
+ %defines
+ 
+@@ -144,7 +146,7 @@ using namespace XxResParserNS; // Make sure we can use the above.
+ %type <num> boolkwd
+ 
+ %start xxdiffrc
+-%pure_parser
++%pure-parser
+ 
+ %%
+ xxdiffrc	: stmts
+@@ -188,7 +190,7 @@ prefgeometry	: PREFGEOMETRY COLON GEOMSPEC
+                       RESOURCES->setPreferredGeometry( geometry );
+                    }
+                    else {
+-                      yyerror( "Bad geometry specification." );
++                      yyerror( resources, "Bad geometry specification." );
+                       // Should never happen, the lexer regexp should be tough
+                       // enough.
+                    }
+@@ -216,7 +218,7 @@ style		: STYLE COLON STRING
+                       err += QString( "\nValid styles are: " );
+                       err += styles.join( ", " );
+ #endif
+-                      yyerror( err.latin1() );
++                      yyerror( resources, err.latin1() );
+ #if (QT_VERSION >= 0x030000)
+                    }
+ #endif
+@@ -230,7 +232,7 @@ accel		: ACCEL DOT ACCELNAME COLON STRING
+                       char buf[2048];
+                       ::snprintf( buf, 2048,
+                                   "Unrecognized accelerator: %s\n", $5 );
+-                      yyerror( buf );
++                      yyerror( resources, buf );
+                    }
+                 }
+ 		;
