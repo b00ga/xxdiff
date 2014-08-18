@@ -1,7 +1,7 @@
 Summary:	Graphical file and directories comparator and merge tool
 Name:		xxdiff
 Version:	3.2
-Release:	22%{?dist}
+Release:	23%{?dist}
 License:	GPLv2+
 Group:		Development/Tools
 URL:		http://furius.ca/xxdiff/
@@ -98,6 +98,9 @@ find ./build  -name \*.py  -print  -exec %{__sed} -i "1{/^#\!/d}" {} \;
 %{_bindir}/xx-svn-resolve
 
 %changelog
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2-23
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Fri Jun 13 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 3.2-22
 - Fix FTBFS with bison-3.x (#1107365)
 
