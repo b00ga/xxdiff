@@ -1,7 +1,7 @@
 Summary:	Graphical file and directories comparator and merge tool
 Name:		xxdiff
 Version:	3.2
-Release:	25%{?dist}
+Release:	26%{?dist}
 License:	GPLv2+
 Group:		Development/Tools
 URL:		http://furius.ca/xxdiff/
@@ -9,7 +9,11 @@ URL:		http://furius.ca/xxdiff/
 # We remove the screenshots directory since the images in there can not be redistributed without permission.
 Source0:	xxdiff-%{version}-noscreenshots.tar.bz2
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+%if "%{rhel}" == "5"
+BuildRequires:	qt-devel < 1:4.0, bison, flex
+%else
 BuildRequires:	qt3-devel < 1:4.0, bison, flex
+%endif
 
 Patch0:		%{name}-fix-cstdlib_h.patch
 Patch1:		xxdiff-3.2-c-linkage.patch
@@ -98,6 +102,9 @@ find ./build  -name \*.py  -print  -exec %{__sed} -i "1{/^#\!/d}" {} \;
 %{_bindir}/xx-svn-resolve
 
 %changelog
+* Fri Dec 11 2015 Shawn K. O'Shea <shawn@eth0.net> - 3.2-26
+- Add conditional to set BuildRequire to qt-devel instead of qt3-devel on EL5
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2-25
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
